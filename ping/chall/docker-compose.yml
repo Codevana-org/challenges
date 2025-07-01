@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  app:
+    image: introduction/ping/app:latest
+    build: 
+      context: ..
+      dockerfile: chall/Dockerfile
+    ports:
+      - "3000"
+    command: sh -c "npm install && npm run start"

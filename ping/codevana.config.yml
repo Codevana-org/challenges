@@ -1,0 +1,6 @@
+service_to_run: "app"
+source_path: "/app"
+service_up_line: "Server is running on port 3000"
+apply_patch_command: "npm install"
+run_tests_command: "npm run test -- --noStackTrace --colors"
+author: "Raxo"
