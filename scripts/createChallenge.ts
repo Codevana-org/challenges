@@ -43,9 +43,9 @@ async function createChallenge() {
   if (test_mode === "e2e") {
     promptList.push({
       type: "input",
-      name: "app_image",
-      message: "🖥️ Docker App Image:",
-      default: `${defaultBase}/coder:latest`,
+      name: "code_image",
+      message: "🖥️ Docker Code Image:",
+      default: `${defaultBase}/code:latest`,
     });
   }
 
@@ -104,7 +104,7 @@ async function createChallenge() {
   };
 
   if (test_mode === "e2e") {
-    config.app_image = imageAnswers.app_image;
+    config.code_image = imageAnswers.code_image;
   }
 
   await fs.writeFile(
