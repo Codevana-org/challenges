@@ -118,10 +118,10 @@ async function createChallenge() {
   );
 
   await fs.writeFile(
-    path.join(testsDir, "run-tests"),
+    path.join(baseDir, "run-tests"),
     `#!/bin/bash\n# run-tests: script executed inside the test container\n# It should run all tests and write result to /sandbox/output/result.json\n`
   );
-  await fs.chmod(path.join(testsDir, "run-tests"), 0o755);
+  await fs.chmod(path.join(baseDir, "run-tests"), 0o755);
 
   if (test_mode === "e2e") {
     await fs.writeFile(
