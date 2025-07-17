@@ -8,37 +8,39 @@ Thanks for your interest in contributing! Here's how to propose a coding challen
 
 Each challenge should follow this structure:
 
-````
-
+```
 your-challenge-name/
-├── chall/
-│   ├── Dockerfile
-│   ├── docker-compose.yml
-│   └── \[any files you want the user to edit]
-├── codevana.config.yml
-├── structure.json
-└── tests/
-└── \[your test files]
+├── code/                    # User-editable files
+│   ├── package.json
+│   └── src/
+│       └── app.js
+├── Dockerfile.test          # Defines the test container environment
+├── tests/                   # Hidden test suite and runner
+│   ├── test.js
+│   └── run-tests
+├── structure.json           # File tree UI + permissions
+└── codevana.config.yml      # Challenge config for orchestrator
+```
 
-````
+---
 
 ### 🧩 Required Files
 
 #### ✅ `codevana.config.yml`
+
 ```yml
-service_to_run: "app"                         # name of the service (from docker-compose)
-source_path: "/app"                           # path inside the container where code is located
-service_up_line: "Server is running on..."    # string that signals the container is ready
-apply_patch_command: "npm install"            # optional patch setup step
-run_tests_command: "npm run test"             # command to run tests
-author: "your-username"
-````
+test_mode: unit
+test_image: codevana/introduction/ping/tester:latest
+```
+
+* `test_mode`: `unit` or `e2e`, depending on the test logic.
+* `test_image`: Full image name to be used by orchestrator for this challenge.
+
+---
 
 #### ✅ `structure.json`
 
-Defines what the user sees in the in-browser editor and what they can edit.
-
-Example:
+Defines the file explorer layout and permissions:
 
 ```json
 [
@@ -58,46 +60,50 @@ Example:
     "path": "/src"
   },
   {
-    "id": "dockerfile",
+    "id": "package-json",
     "type": "file",
-    "name": "Dockerfile",
-    "path": "/Dockerfile",
+    "name": "package.json",
+    "extension": "json",
+    "path": "/package.json",
     "readonly": true
   }
 ]
 ```
 
-* All files listed here must exist in `/chall`.
-* Only files **not marked as `readonly`** can be edited.
-* This is how the UI builds the file tree.
+* These paths are **relative to the `/code` directory**.
+* Only files not marked `readonly` can be edited by the user.
 
 ---
 
 ## 🧪 Tests
 
-Put your tests in a separate `/tests/` directory **outside `/chall`**. These files are never exposed to users.
+* Put your test logic in the `/tests/` folder.
+* Include a `run-tests` script that runs the tests and writes the result to `/sandbox/output/result.json` in the format:
 
-* They will be mounted at runtime and executed via the `run_tests_command`.
-* You can use any test runner — Jest, Mocha, pytest, etc.
+```json
+{
+  "passed": true,
+  "message": "All Tests Passed 🎉"
+}
+```
+
+* Any testing framework is allowed.
+* This script is run inside the container defined in `Dockerfile.test`.
 
 ---
 
 ## 🔐 Security Tips
 
-Your container is isolated, but users **can modify anything inside `/chall`**.
-
 ✅ Do:
 
-* Ensure the test suite isn't accessible from the user container.
-* Write Dockerfiles that do not allow shell escape (`/bin/sh`, `bash`, etc.).
-* Disable interactive terminals.
-* Ensure no secrets or tokens are embedded in the challenge.
+* Never expose `/tests/` to user-facing containers.
+* Avoid exposing internal tools or credentials in Dockerfile layers.
+* Write clean `run-tests` logic that cannot be tampered with by user code.
 
 ❌ Don’t:
 
-* Expose test logic inside the user-facing app.
-* Run in privileged mode.
-* Mount host paths.
+* Place any test logic inside the `code/` directory.
+* Use interactive shells or insecure Docker options.
 
 ---
 

@@ -18,18 +18,17 @@ This repository is **not used to store the actual challenges** submitted by cont
 ```bash
 .
 ├── ping/                    # Example challenge
-│   ├── chall/              # Code run by the user
-│   │   ├── docker-compose.yml
-│   │   ├── Dockerfile
+│   ├── code/                # Editable code the user interacts with
 │   │   ├── package.json
 │   │   └── src/
 │   │       └── app.js
-│   ├── codevana.config.yml # Metadata for runner
-│   ├── structure.json      # File tree and editor permissions
-│   └── tests/              # Hidden test suite for validation
-│       ├── jest.config.js
-│       └── ping.test.js
-├── CONTRIBUTING.md          # Submission guide
+│   ├── Dockerfile.test      # Testing container image
+│   ├── tests/               # Test suite (never shown to users)
+│   │   ├── test.js
+│   │   └── run-tests        # Script that outputs result to result.json
+│   ├── structure.json       # File tree and edit permissions
+│   └── codevana.config.yml  # Metadata for orchestrator
+├── CONTRIBUTING.md
 └── README.md
 ```
 
@@ -37,20 +36,29 @@ This repository is **not used to store the actual challenges** submitted by cont
 
 ## 🧠 How Challenges Work
 
-* All editable files for the user **must live in the `/chall` directory**.
-* The `structure.json` defines the file explorer layout and **controls what the user can edit**.
-* Files marked with `"readonly": true` in `structure.json` will be locked in the UI & backend.
+Each challenge is self-contained in its folder and includes:
 
-The user code is mounted into a **secure Docker container**. The runner:
+* `code/`: All files visible and editable by the user in the web IDE.
+* `structure.json`: Defines which files appear in the editor and which are editable.
+* `tests/`: Hidden folder that contains test files and the `run-tests` script.
+* `Dockerfile.test`: Defines the container used for test execution.
+* `codevana.config.yml`: Describes test execution mode and Docker image reference.
 
-* Starts the container defined in `docker-compose.yml`.
-* Waits for the line defined in `service_up_line` (e.g. `Server is running on port 3000`).
-* Sends test cases to the running service and evaluates the result.
+### ✅ Test Execution Flow
 
-Each challenge defines:
+1. The orchestrator builds and runs the `Dockerfile.test`.
+2. It mounts the user's code and test directory inside the container.
+3. The `tests/run-tests` script is executed.
+4. This script writes test results as a JSON object to `/sandbox/output/result.json`.
 
-* `codevana.config.yml`: runtime and test config.
-* `structure.json`: exposed file tree.
+```json
+{
+  "passed": true,
+  "message": "All Tests Passed 🎉"
+}
+```
+
+> 🔐 Tests and internal scripts must never be accessible from the user’s code.
 
 ---
 
