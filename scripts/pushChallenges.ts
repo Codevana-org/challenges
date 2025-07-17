@@ -36,12 +36,64 @@ async function walkLocalFiles(dir: string): Promise<string[]> {
 	return files;
 }
 
+/**
+ * Recursively list all files in the bucket
+ */
+async function walkBucket(prefix = ''): Promise<string[]> {
+	const { data, error } = await supabase.storage
+		.from(BUCKET_NAME)
+		.list(prefix, { limit: 1000 });
+
+	if (error) {
+		console.error(`Error listing ${prefix}:`, error.message);
+		return [];
+	}
+
+	let allFiles: string[] = [];
+
+	for (const item of data) {
+		const fullPath = prefix ? `${prefix}/${item.name}` : item.name;
+		if (!item.metadata) {
+			const subFiles = await walkBucket(fullPath);
+			allFiles.push(...subFiles);
+		} else {
+			allFiles.push(fullPath);
+		}
+	}
+
+	return allFiles;
+}
+
+/**
+ * Delete all files in the bucket before uploading
+ */
+async function clearBucket() {
+	const filesToDelete = await walkBucket();
+
+	if (filesToDelete.length === 0) {
+		console.log('🧹 Bucket already empty.');
+		return;
+	}
+
+	const { error } = await supabase.storage
+		.from(BUCKET_NAME)
+		.remove(filesToDelete);
+
+	if (error) {
+		console.error('❌ Failed to clear bucket:', error.message);
+	} else {
+		console.log(`🧹 Cleared ${filesToDelete.length} file(s) from bucket.`);
+	}
+}
+
 async function uploadAllFiles() {
+	await clearBucket();
+
 	const files = await walkLocalFiles(LOCAL_DIR);
 
 	for (const filePath of files) {
 		const fileBuffer = await fs.readFile(filePath);
-		const relativePath = path.relative(LOCAL_DIR, filePath).replace(/\\/g, '/'); // For Windows compatibility
+		const relativePath = path.relative(LOCAL_DIR, filePath).replace(/\\/g, '/');
 
 		const { error } = await supabase.storage
 			.from(BUCKET_NAME)

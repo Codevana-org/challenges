@@ -1,0 +1,2 @@
+test_mode: unit
+test_image: codevana/introduction/ping/tester:latest

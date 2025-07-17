@@ -1,0 +1,30 @@
+#!/bin/sh
+set -e
+
+export NODE_PATH=/sandbox/deps/node_modules
+
+# Allow Jest to fail
+set +e
+npx jest --runInBand --json --config=/sandbox/tests/jest.config.js > /tmp/stdout_raw.json
+EXIT_CODE=$?
+set -e
+
+# Build the message
+if [ "$EXIT_CODE" -ne 0 ]; then
+  # Extract failed test names
+  FAILED_TESTS=$(jq -r '[.testResults[].assertionResults[] | select(.status == "failed") | .fullName] | join(", ")' /tmp/stdout_raw.json)
+
+  # Create message with failed test names
+  MESSAGE="Some Tests Failed 😿 <br/>— $FAILED_TESTS"
+else
+  MESSAGE="All Tests Passed 🎉"
+fi
+
+# Write result.json
+jq -n \
+  --argjson passed "$([ "$EXIT_CODE" -eq 0 ] && echo true || echo false)" \
+  --arg message "$MESSAGE" \
+  '{passed: $passed, message: $message}' \
+  > /sandbox/output/result.json
+
+exit $EXIT_CODE

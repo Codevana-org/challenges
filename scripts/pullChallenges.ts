@@ -5,14 +5,14 @@ import path from 'path';
 import dotenv from "dotenv";
 dotenv.config();
 
-const SUPABASE_URL = process.env.SUPABASE_URL
+const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const BUCKET_NAME = 'challenges';
 const OUTPUT_DIR = './challenges';
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
-	console.error('Supabase URL or Service Role Key is not set in environment variables.');
-	process.exit(1);
+  console.error('Supabase URL or Service Role Key is not set in environment variables.');
+  process.exit(1);
 }
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -35,7 +35,6 @@ async function walkDirectory(prefix = '') {
     const fullPath = prefix ? `${prefix}/${item.name}` : item.name;
 
     if (!item.metadata) {
-      // Manually recurse into folders
       const subFiles = await walkDirectory(fullPath);
       allFiles.push(...subFiles);
     } else {
@@ -47,7 +46,10 @@ async function walkDirectory(prefix = '') {
 }
 
 async function downloadAllFiles() {
+  // 🔥 Clear output directory first
+  await fs.remove(OUTPUT_DIR);
   await fs.ensureDir(OUTPUT_DIR);
+
   const files = await walkDirectory();
 
   for (const filePath of files) {
