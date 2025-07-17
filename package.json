@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "pull:challenges": "tsx scripts/pullChallenges.ts",
-    "push:challenges": "tsx scripts/pushChallenges.ts"
+    "push:challenges": "tsx scripts/pushChallenges.ts",
+    "create:challenge": "tsx scripts/createChallenge.ts",
+    "generate:structure": "tsx scripts/generateStructure.ts"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +15,8 @@
     "@supabase/supabase-js": "^2.51.0",
     "dotenv": "^17.2.0",
     "fs-extra": "^11.3.0",
+    "inquirer": "^12.7.0",
+    "js-yaml": "^4.1.0",
     "node-fetch": "^3.3.2",
     "tsx": "^4.20.3"
   }
