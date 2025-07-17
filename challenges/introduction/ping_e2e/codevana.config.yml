@@ -1,0 +1,3 @@
+test_mode: e2e
+test_image: codevana/introduction/ping/tester:latest
+code_image: codevana/introduction/ping/code:latest

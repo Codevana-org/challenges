@@ -1,0 +1,12 @@
+FROM node:20-alpine
+
+# Create and set working directory
+WORKDIR /sandbox
+
+# Copy and install runtime dependencies
+COPY ./code/package.json ./deps/
+RUN cd ./deps && npm install --omit=dev --no-audit
+
+# Copy the run-code script
+COPY ./run-code ./run-code
+RUN chmod +x ./run-code

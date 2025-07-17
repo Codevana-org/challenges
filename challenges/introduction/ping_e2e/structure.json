@@ -15,26 +15,11 @@
     "path": "/src"
   },
   {
-    "id": "docker-compose-yml",
-    "type": "file",
-    "name": "docker-compose.yml",
-    "extension": "yml",
-    "path": "/docker-compose.yml",
-    "readonly": true
-  },
-  {
-    "id": "dockerfile",
-    "type": "file",
-    "name": "Dockerfile",
-    "extension": "",
-    "path": "/Dockerfile",
-    "readonly": true
-  },
-  {
     "id": "package-json",
     "type": "file",
     "name": "package.json",
     "extension": "json",
-    "path": "/package.json"
+    "path": "/package.json",
+    "readonly": true
   }
 ]

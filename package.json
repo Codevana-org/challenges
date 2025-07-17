@@ -1,0 +1,19 @@
+{
+  "name": "challenges",
+  "version": "1.0.0",
+  "description": "Welcome to the Codevana Community Challenge Repository!",
+  "main": "index.js",
+  "scripts": {
+    "pull:challenges": "tsx scripts/pullChallenges.ts",
+    "push:challenges": "tsx scripts/pushChallenges.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.51.0",
+    "dotenv": "^17.2.0",
+    "fs-extra": "^11.3.0",
+    "node-fetch": "^3.3.2",
+    "tsx": "^4.20.3"
+  }
+}

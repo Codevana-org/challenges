@@ -1,0 +1,25 @@
+[
+  {
+    "id": "src",
+    "type": "folder",
+    "name": "src",
+    "children": [
+      {
+        "id": "src-app-js",
+        "type": "file",
+        "name": "app.js",
+        "extension": "js",
+        "path": "/src/app.js"
+      }
+    ],
+    "path": "/src"
+  },
+  {
+    "id": "package-json",
+    "type": "file",
+    "name": "package.json",
+    "extension": "json",
+    "path": "/package.json",
+    "readonly": true
+  }
+]

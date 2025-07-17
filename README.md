@@ -3,9 +3,11 @@
 Welcome to the Codevana Community Challenge Repository!
 
 This repository is **not used to store the actual challenges** submitted by contributors. Instead, it provides:
-- An example challenge (`ping/`) to demonstrate structure.
+- An example challenge (`challenges/introduction/ping/`) to demonstrate structure.
 - Guidelines and templates for contributing your own challenges.
 - Config and structure files expected for each challenge submission.
+- Scripts to pull and push challenges to/from the main repository.
+- Scripts for managing challenge metadata and structure.
 
 > ⚠️ Submitted challenges are stored securely and privately elsewhere. Contributors will **not** be able to view or access each other's challenges.
 

@@ -1,0 +1,25 @@
+#!/bin/sh
+set -e
+
+export NODE_PATH=/sandbox/deps/node_modules
+
+echo "Waiting for app to start..."
+
+for i in $(seq 1 10); do
+  if curl -s http://$TARGET_HOST:$TARGET_PORT > /dev/null; then
+    echo "App is up!"
+    break
+  fi
+  sleep 1
+done
+
+echo "Running tests..."
+set +e
+npx jest --runInBand --json --outputFile=/tmp/stdout_raw.json --config=tests/jest.config.js
+EXIT_CODE=$?
+set -e
+
+jq -n \
+  --argjson passed "$([ "$EXIT_CODE" -eq 0 ] && echo true || echo false)" \
+  --arg message "$(jq -r '.testResults[] | select(.status == "failed") | .message' /tmp/stdout_raw.json | paste -sd '\n' -)" \
+  '{passed: $passed, message: $message}' > /sandbox/output/result.json

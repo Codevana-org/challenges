@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("./src/app");
+const app = require("/sandbox/code/src/app");
 
 describe("GET /ping", () => {
   it("should return pong", async () => {

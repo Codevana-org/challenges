@@ -1,0 +1,14 @@
+FROM node:20-alpine
+
+# Install jq
+RUN apk add --no-cache jq curl
+
+WORKDIR /sandbox
+
+# Install testing dependencies
+RUN npm install --no-save jest supertest
+
+# Copy tests and runner
+COPY ./tests ./tests
+COPY ./tests/run-tests ./run-tests
+RUN chmod +x ./run-tests

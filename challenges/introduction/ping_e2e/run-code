@@ -1,0 +1,4 @@
+#!/bin/sh
+export NODE_PATH=/sandbox/deps/node_modules
+
+exec node code/src/app.js
