@@ -26,7 +26,7 @@ your-challenge-name/
 
 ### 🧩 Required Files
 
-#### ✅ `codevana.config.yml`
+#### ✅ Unit Config - `codevana.config.yml`
 
 ```yml
 test_mode: unit
@@ -37,6 +37,25 @@ test_image: codevana/introduction/ping/tester:latest
 * `test_image`: Full image name to be used by orchestrator for this challenge.
 
 ---
+
+#### ✅ E2E Config - `codevana.config.yml`
+
+```yml
+test_mode: e2e
+test_image: codevana/introduction/ping/tester:latest
+code_image: codevana/introduction/ping/code:latest
+
+services:
+  mongodb:
+    image: mongo:latest
+    port: 27017
+    env:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+```
+
+* `code_image`: Full image name for the user code.
+* `services`: Optional services like databases or caches, with their Docker images, ports, and environment variables.
 
 #### ✅ `structure.json`
 
