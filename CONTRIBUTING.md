@@ -3,6 +3,11 @@
 Thanks for your interest in contributing! Here's how to propose a coding challenge for Codevana.
 
 ---
+## 📜 Available Scripts
+- `pull:challenges`: Pulls the latest challenges from the repository.
+- `push:challenges`: Pushes your local changes to the challenges repository.
+- `create:challenge`: Initializes a new challenge directory with the required structure.
+- `generate:structure`: Generates the `structure.json` file based on your challenge's file structure.
 
 ## 📦 Challenge Submission Guidelines
 
